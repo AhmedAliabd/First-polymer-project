@@ -1,5 +1,4 @@
 import { LitElement, html } from "@polymer/lit-element";
-import "./button";
 class TodoApp extends LitElement {
   static get properties() {
     return {
@@ -8,12 +7,41 @@ class TodoApp extends LitElement {
   }
   constructor() {
     super();
-    this.todoList = [];
+    this.todoList = [{ text: "do hw", completed: false }];
   }
 
   render() {
-    return html`<h1>Hello</h1>
-      <my-button></my-button>`;
+    return html`<h1>To Do</h1>
+      <ul>
+        ${this.todoList.map(
+          (item) =>
+            html`<li
+              id=${"YFG" + new Date().getUTCMilliseconds().toString()}
+              @click=${this.delete}
+            >
+              ${item.text}
+            </li>`
+        )}
+      </ul>
+      <input id="newitem" />
+      <button @click=${this.addTodo}>Add</button> `;
+  }
+
+  input() {
+    return this.shadowRoot.querySelector("#newitem");
+  }
+  delete(e) {
+    console.log(e.target.id);
+    const element = this.shadowRoot.querySelector(`#${e.target.id}`);
+    console.log(element.textContent);
+    //this.todoList = this.todoList.filter((item) => item !== e.target.value);
+    //console.log(this.todoList);
+    //this.requestUpdate();
+  }
+  addTodo() {
+    this.todoList.push({ text: this.input().value, completed: false });
+    this.input().value = "";
+    this.requestUpdate();
   }
 }
 
